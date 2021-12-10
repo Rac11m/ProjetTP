@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+typedef struct listeMots listeMotsPointer;
+typedef struct listeMots
+{
+    // data
+    char s[100];
+    // pointer to next
+    listeMotsPointer suivant;
+} listeMots;
+void Decoupe(char S, char* T,int d,int f) {
+
+    int i=0;
+    for(d;d<=f;d++) {
+        T[i]=S[d];
+        i++;
+    }
+    T[f]='\0';
+
+}
+
+listeMotsPointer creerNoeud() {
+    listeMotsPointer noeud = (listeMotsPointer)malloc(sizeof(listeMots));
+    noeud->suivant=NULL;
+    return noeud;
+}
+
+listeMotsPointer ajoutNoeud(listeMotsPointer tete,listeMotsPointer queue,char*  S){
+    listeMotsPointer new = creerNoeud();
+   // listeMotsPointer temp = tete;
+    strcpy(new->s,S);
+    if (tete==NULL) {
+        tete=new;
+        queue=new;
+    } else {
+
+        queue->suivant=new;
+        queue=new;
+    }
+    return new ;
+}
+int main()
+{
+    listeMotsPointer tete=NULL,q,p;
+    char s[10]="racim";
+    char t[10];
+    Decoupe(s,t,1,5);
+    printf("%s",t);
+    tete=ajoutNoeud(tete,q,"CRB MCA");
+
+    printf("%s",tete->s);
+    p=ajoutNoeud(tete,q,"kk");
+    printf("%s",p->s);
+    printf("\n");
+    printf("%p",p->suivant);
+    return 0;
+}
