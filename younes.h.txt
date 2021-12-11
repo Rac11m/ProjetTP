@@ -1,0 +1,34 @@
+//definition du type listeMots
+
+typedef struct listeMots listeMots;
+struct listeMots{
+	char* info;
+	listeMots *suivant;
+};
+
+listeMots motsDe(char* t){
+	listeMots maListe,temp; //on crée la variable temp pour ne pas perdre la tete de maliste
+	char *t1=t,*t2=t; /*t1 et t2 sont pour parcourir le text t ;t1 en premier puis t2 pour ne pas perdre chaque mot qu'onva copier*/
+	char* x;
+	if(t==NULL) exit(1); 
+	
+	while(t1!=NULL){	
+		/*dans cette fonction on calcule la longueur de chaque mot à partir du texte on teste d'abord s'il existe 
+		dejà dans maliste puis on le copie dans maliste grace a la fonction strncpy en utilisant les pointeurs t1 et t2 */
+		
+		int len=0;
+		while(('A'<*t1<'Z')||('a'<*t1<'z')||(*t1=='é')||(*t1=='è')||(*t1=='ç')||(*t1=='ù')||(*t1=='à')){
+			len++;
+			t1++;
+		}
+		temp.info=(char*)malloc(len);
+		temp.info=strncpy(temp.info,t2,len);
+		temp=temp.suivant;
+		
+		do{
+			t1++;
+			t2=t1;	
+		}while(!isalpha(*t1)||(*t1!='é')||(*t1!='è')||(*t1!='ç')||(*t1!='ù')||(*t1!='à'));
+	
+	return maListe;
+}

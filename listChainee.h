@@ -15,11 +15,10 @@ typedef struct element
 
 
 void Decoupe(char* , char* ,int ,int );
-listeMots creerNoeud(char *);
-listeMots ajoutTete(listeMots , char* );
-// void ajoutNoeud(listeMots ,char* );
-void ajoutNoeud(listeMots, listeMots* , char* );
+listeMots creerNoeud();
+// void ajoutNoeud(listeMots *, listeMots *);
 listeMots motsDe(char* ); 
-
+listeMots ajoutTete(listeMots );
+void ajoutNoeud(listeMots , listeMots *);
 
 #endif // LIST_H_INCLUDED
