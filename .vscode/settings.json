@@ -1,6 +1,9 @@
 {
     "C_Cpp.errorSquiggles": "Disabled",
     "files.associations": {
-        "listchainee.h": "c"
+        "*.ejs": "html",
+        "listchainee.h": "c",
+        "stdio.h": "c",
+        "mesfonctionsfichier.h": "c"
     }
 }

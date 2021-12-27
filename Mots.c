@@ -1,10 +1,14 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "listChainee.h"
- 
-// t = "Bonjour je m'appelle racim."     d='B'  f=6                          1er cellule -> info = "Bonjour", *suivant = Null 
- //  ecrire une fonction qui retourne une sous-chaine de S dans T en connaissant l'indice d et f .
+#include "Headers/listChainee.h"
+#include "Headers/mesFonctionsFichier.h"
 
+bool isPoint(char c) {
+    if (c== '.') {
+        return true;
+    }
+    return false;
+}
 
 listeMots creerNoeud() {
     listeMots noeud = (listeMots)malloc(sizeof(element));
@@ -12,20 +16,6 @@ listeMots creerNoeud() {
     noeud->suivant=NULL;
     return noeud;
 }
-
-/*
-void ajoutNoeud(listeMots *tete,listeMots *queue){
-    listeMots new = creerNoeud();
-    if (*tete == NULL) {   
-         *tete=new;
-         *queue=*tete;
-    } else { 
-            (*queue)->suivant=new;
-            *queue=new;
-    }
-}
-*/
-
 
 void ajoutNoeud(listeMots tete, listeMots *prd){
      if (tete->suivant == NULL) {
@@ -36,118 +26,127 @@ void ajoutNoeud(listeMots tete, listeMots *prd){
          *prd = nouv;
 }
 
-
-
+char* toLower(char *chaine) {
+    int i=0;
+    int taille = strlen(chaine);
+    char *s = malloc(taille+1);
+    
+    for (i=0;i<taille;i++) {
+      s[i] = tolower(chaine[i]);
+    }  
+               
+    s[taille]='\0';
+    return s;
+}
 
 void Decoupe(char* T, char* S,int d,int f) {
-    int k=0,j=d;
+    int k=0;
 
     char temp[100];
-    for(j;j<=f;j++) { /// Bon   d=3 f=6
-        temp[k]=S[j];  // temp[0]= S[3];
+    for(d;d<=f;d++) { 
+        temp[k]=S[d]; 
         k++;
     }
     temp[k]='\0';
-    strcpy(T,temp);
+    strcpy(T,toLower(temp));
 }
-// strtok
 
-///    Bonjour
 
-listeMots motsDe(char* t) {
-    int i=0,d=0,f=0,taille=strlen(t);
-    listeMots tete=NULL,queue=NULL,temp;
-    char p[MAX];
-    
-    while (!isspace(t[i]))
-    {
-        if (isalpha(t[i])){
-                d=i; // d=0
-                f=d; // f=0
-                i++;
-                while (isalpha(t[i])){
-                    f++;  //f=6
-                    i++;   // i=4
-                }       
-                  tete=creerNoeud();
-                 // strcpy(tete->s,"Bonjour");
-                 Decoupe(tete->s, t, d, f);
-                 queue=tete; 
-        } else {
-            i++;
-            
+void SuppDbl (listeMots tete) {
+        listeMots pc,pr,ps;
+
+        pc = tete;
+        while (pc != NULL)
+        {
+            pr=pc;
+            ps=pc->suivant;
+            while (ps != NULL) {
+                if (strcmp(ps->s,pc->s) == 0) {
+                    pr->suivant = ps->suivant;
+                    free(ps);
+                    ps = pr->suivant; 
+                } else {
+                    pr = ps;
+                    ps = ps ->suivant;
+                }
+            }
+            pc = pc->suivant;
         }
+          
+}
+
+void triListeMots(listeMots tete) {
+    listeMots pc,pr,ps;
+    char x[MAX];
+    pc=tete;
+    while (pc != NULL){
+        pr=pc;
+        ps=pc->suivant;
+        while(ps != NULL){
+            if(strcmp(ps->s,pc->s) == 0){
+                ps=ps->suivant;
+            }else if(strcmp(pc->s,ps->s) > 0) {
+                    strcpy(x,ps->s);
+                    strcpy(ps->s,pc->s);
+                    strcpy(pc->s,x);
+                    ps=ps->suivant;
+            } else {
+                    ps=ps->suivant;
+            }
+        }
+        pc=pc->suivant;
     }
- 
-  while (i<taille)
-    {
-        if (tolower(t[i]) >= 'a' && tolower(t[i] <= 'z')){
+    
+}
+
+
+listeMots motsDe(char* t) {     // Probleme des la fonction pour l'instant : elle contient les doublons.
+    int i=0,d=0,f=0,taille=strlen(t);
+    listeMots tete=NULL,queue=NULL;
+    char p[MAX];
+    bool doublon=false;
+  while (i<taille){
+       if(isalpha(t[i]) || isPoint(t[i])){
                 d=i; // d=0
                 f=d; // f=0
-                i++;
-                while(tolower(t[i]) >= 'a' && tolower(t[i] <= 'z')) {
+                i++;  
+               while (isalpha(t[i])){
                     f++;
                     i++;
                 }
-                Decoupe(p,t,d,f);
-                while (tete != NULL && !strcmp(p,tete->s)) {
-                    if (!strcmp(p,tete->s)) {
-                        
-                    }
-                }
-                
-                
-        } else {
-            i++;
-
-        }
-        
-    }
-   
-
+                    Decoupe(p,t,d,f);
+                        if (tete == NULL) {
+                                tete=creerNoeud();
+                                strcpy(tete->s,p);
+                                queue=tete; 
+                        } else{
+                                    ajoutNoeud(tete,&queue);
+                                    strcpy(queue->s,p); 
+  
+                            }
+        }  else {
+                i++; }  
+         
+  }
+ // triListeMots(tete);  
     return tete;
 }
-
 
 
 /*
-listeMots motsDe(char *t) {
-    listeMots tete=NULL,queue=NULL,temp;
-    int len=strlen(t),f=0,d=0,i=0;
-       
-
-    while (!isspace(t[i])) {
-        if (tolower(t[i]) >= 'a' && tolower(t[i]) <= 'z') {
-                d=i;
-                f=d; 
-                while(tolower(t[i]) >= 'a' && tolower(t[i]) <= 'z') {
-                    f++;
-                    i++;
-                }
-                ajoutNoeud(&tete,&queue);
-                Decoupe(tete->s, t, d, f);
-                                        
-        }else {
-            i++;
-            
-        }
-    }
-        temp =tete;
-     while (i<len) {
-        if (tolower(t[i]) >= 'a' && tolower(t[i]) <= 'z') {
-                d=i;
-                f=d; 
-                while(tolower(t[i]) >= 'a' && tolower(t[i]) <= 'z') {
-                    f++;
-                    i++;
-                }
-                 ajoutNoeud(&temp,&queue);
-                 Decoupe(queue->s, t, d, f);
-                                        
-        }else {
-            i++; 
-        }
-    }             
-    return tete;
+bool isDoublon(char *t,listeMots liste) {
+        bool x=false;
+        while (liste != NULL && x == false) {
+             if (strcmp(toLower(t),toLower(liste->s))){
+               x=true;
+             } else {
+                    liste=liste->suivant;
+             }
+        }   
+        return x;
 }
+
 */
+
+
+
